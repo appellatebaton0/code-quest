@@ -1,6 +1,6 @@
 extends Component
 class_name FreeComponent
-var me:Area2D = get_me()
+var me:Node = get_me()
 
 signal got_free
 
@@ -17,13 +17,3 @@ func _process(delta: float) -> void:
 		if free_time >= free_delay:
 			actor.queue_free()
 		free_time += delta
-
-func _on_area_entered(area: Area2D) -> void:
-	free_actor()
-func _on_body_entered(body: Node2D) -> void:
-	free_actor()
-
-func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
-	if event is InputEventMouseButton:
-		if event.pressed:
-			free_actor()

@@ -10,6 +10,7 @@ func hurt(hurter:Actor):
 
 
 func _on_area_entered(area: Area2D) -> void:
+	print(area)
 	var component = area # Abstract type
 	if component is HitboxComponent:
 		hurt(component.actor)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://chm3si0nicqxd"]
+[gd_scene load_steps=18 format=4 uid="uid://chm3si0nicqxd"]
 
 [ext_resource type="Texture2D" uid="uid://dds73m1ns0ua5" path="res://assets/tileset.png" id="1_85g3d"]
 [ext_resource type="Script" uid="uid://dwh0yifrqxhcp" path="res://scripts/actor.gd" id="3_jyhfs"]
@@ -8,7 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://kek6tefk2fpk" path="res://scenes/actors/bug.tscn" id="6_tipki"]
 [ext_resource type="Script" uid="uid://chbmrmtuoajba" path="res://scripts/spawner_components/position/psc_rect.gd" id="8_85g3d"]
 [ext_resource type="Script" uid="uid://c4q76hlb4lmjj" path="res://scripts/spawner_components/rotation/rsc_manual.gd" id="8_choun"]
+[ext_resource type="PackedScene" uid="uid://cfhfudk7fnj6v" path="res://scenes/components/cp_hurtbox.tscn" id="9_choun"]
 [ext_resource type="Script" uid="uid://cc2gg12volxh5" path="res://scripts/label.gd" id="10_choun"]
+[ext_resource type="PackedScene" uid="uid://cabi2tsjjcc6r" path="res://scenes/components/cp_lose.tscn" id="10_ya4ey"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_choun"]
 texture = ExtResource("1_85g3d")
@@ -19,10 +21,16 @@ texture = ExtResource("1_85g3d")
 sources/0 = SubResource("TileSetAtlasSource_choun")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_85g3d"]
-size = Vector2(75.105, 203)
+size = Vector2(14.5525, 203)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_choun"]
-size = Vector2(367.276, 65)
+size = Vector2(367.276, 11)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ya4ey"]
+size = Vector2(92, 335)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eb6dy"]
+size = Vector2(558, 95)
 
 [node name="Main" type="Node2D" groups=["Main"]]
 
@@ -55,6 +63,7 @@ x_range = Vector2(75, 120)
 metadata/_custom_type_script = "uid://cpes6pftnofn4"
 
 [node name="PSC_Rect" type="CollisionShape2D" parent="Spawner/Left"]
+position = Vector2(30.2762, 0)
 shape = SubResource("RectangleShape2D_85g3d")
 debug_color = Color(0.7, 0.548333, 0, 0.419608)
 script = ExtResource("8_85g3d")
@@ -82,6 +91,7 @@ x_range = Vector2(75, 120)
 metadata/_custom_type_script = "uid://cpes6pftnofn4"
 
 [node name="PSC_Rect" type="CollisionShape2D" parent="Spawner/Right"]
+position = Vector2(-27, -1)
 shape = SubResource("RectangleShape2D_85g3d")
 debug_color = Color(0.7, 0.548333, 0, 0.419608)
 script = ExtResource("8_85g3d")
@@ -109,7 +119,7 @@ rotation = 90.0
 metadata/_custom_type_script = "uid://c4q76hlb4lmjj"
 
 [node name="PSC_Rect" type="CollisionShape2D" parent="Spawner/Up"]
-position = Vector2(1.36188, 0.5)
+position = Vector2(1.36188, 27.5)
 shape = SubResource("RectangleShape2D_choun")
 debug_color = Color(0.7, 0.548333, 0, 0.419608)
 script = ExtResource("8_85g3d")
@@ -137,10 +147,35 @@ rotation = -90.0
 metadata/_custom_type_script = "uid://c4q76hlb4lmjj"
 
 [node name="PSC_Rect" type="CollisionShape2D" parent="Spawner/Down"]
-position = Vector2(1.36188, 0.5)
+position = Vector2(1, -25)
 shape = SubResource("RectangleShape2D_choun")
 debug_color = Color(0.7, 0.548333, 0, 0.419608)
 script = ExtResource("8_85g3d")
+
+[node name="LoseCondition" type="Node2D" parent="."]
+script = ExtResource("3_jyhfs")
+metadata/_custom_type_script = "uid://dwh0yifrqxhcp"
+
+[node name="CP_Hurtbox" parent="LoseCondition" instance=ExtResource("9_choun")]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LoseCondition/CP_Hurtbox"]
+position = Vector2(260, 5)
+shape = SubResource("RectangleShape2D_ya4ey")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="LoseCondition/CP_Hurtbox"]
+position = Vector2(-255, -2)
+shape = SubResource("RectangleShape2D_ya4ey")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="LoseCondition/CP_Hurtbox"]
+position = Vector2(1, 173)
+shape = SubResource("RectangleShape2D_eb6dy")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="LoseCondition/CP_Hurtbox"]
+position = Vector2(8, -172)
+shape = SubResource("RectangleShape2D_eb6dy")
+
+[node name="CP_Lose" parent="LoseCondition" instance=ExtResource("10_ya4ey")]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -153,6 +188,8 @@ offset_right = 30.0
 offset_bottom = 23.0
 grow_horizontal = 2
 size_flags_horizontal = 6
-theme_override_font_sizes/font_size = 31
+theme_override_font_sizes/font_size = 60
 text = "SCORE: "
 script = ExtResource("10_choun")
+
+[connection signal="got_hurt" from="LoseCondition/CP_Hurtbox" to="LoseCondition/CP_Lose" method="lose"]

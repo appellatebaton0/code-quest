@@ -2,8 +2,5 @@
 
 [ext_resource type="Script" uid="uid://d25af0viaxcrw" path="res://scripts/components/cp_free.gd" id="1_b3nlc"]
 
-[node name="CP_Free" type="Area2D"]
+[node name="CP_Free" type="Node"]
 script = ExtResource("1_b3nlc")
-
-[connection signal="area_entered" from="." to="." method="_on_area_entered"]
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
