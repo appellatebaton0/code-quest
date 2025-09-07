@@ -1,0 +1,53 @@
+[gd_scene load_steps=11 format=3 uid="uid://kek6tefk2fpk"]
+
+[ext_resource type="Script" uid="uid://dwh0yifrqxhcp" path="res://scripts/actor.gd" id="1_8dihf"]
+[ext_resource type="PackedScene" uid="uid://byojuvig761hd" path="res://scenes/components/cp_motion.tscn" id="2_ssu4b"]
+[ext_resource type="PackedScene" uid="uid://dnd4kisf8wjau" path="res://scenes/components/cp_sprite.tscn" id="3_4c8bg"]
+[ext_resource type="Texture2D" uid="uid://bfeymagkhabkr" path="res://assets/bug.png" id="4_ssu4b"]
+[ext_resource type="PackedScene" uid="uid://c5lgrvfkkeake" path="res://scenes/components/cp_free.tscn" id="6_j64ad"]
+[ext_resource type="PackedScene" uid="uid://cfhfudk7fnj6v" path="res://scenes/components/cp_hurtbox.tscn" id="7_d1srl"]
+[ext_resource type="Script" uid="uid://djrru78hi2tbg" path="res://scripts/components/cp_score.gd" id="8_ssu4b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a2f0v"]
+size = Vector2(14, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ssu4b"]
+size = Vector2(22, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_iq6g4"]
+size = Vector2(14, 14)
+
+[node name="Bug" type="Node2D" groups=["Actors"]]
+script = ExtResource("1_8dihf")
+
+[node name="CP_Motion" parent="." instance=ExtResource("2_ssu4b")]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CP_Motion"]
+shape = SubResource("RectangleShape2D_a2f0v")
+
+[node name="CP_Sprite" parent="." instance=ExtResource("3_4c8bg")]
+texture_filter = 1
+texture = ExtResource("4_ssu4b")
+
+[node name="CP_Free" parent="." instance=ExtResource("6_j64ad")]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CP_Free"]
+position = Vector2(-2, 0)
+shape = SubResource("RectangleShape2D_ssu4b")
+
+[node name="CP_Hurtbox" parent="." instance=ExtResource("7_d1srl")]
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CP_Hurtbox"]
+shape = SubResource("RectangleShape2D_iq6g4")
+
+[node name="CP_Score" type="Node" parent="."]
+script = ExtResource("8_ssu4b")
+score_modifier = 1
+metadata/_custom_type_script = "uid://djrru78hi2tbg"
+
+[connection signal="got_free" from="CP_Free" to="CP_Score" method="modify_score"]
+[connection signal="input_event" from="CP_Free" to="CP_Free" method="_on_input_event"]
+[connection signal="clicked_on" from="CP_Hurtbox" to="CP_Free" method="free"]
